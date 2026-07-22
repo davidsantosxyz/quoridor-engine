@@ -27,10 +27,19 @@ class Board:
 
     def add_pawn(
         self,
-        pawn: Pawn
+        pawn: Pawn,
+        x: int,
+        y: int,
     ):
+        if not 0 <= x <= self.board_size - 1:
+            raise ValueError(f'x must be between 0 and {self.board_size - 1}.')
+        elif not 0 <= y <= self.board_size - 1:
+            raise ValueError(f'y must be between 0 and {self.board_size - 1}.')
+        elif pawn in self.pieces:
+            raise ValueError(f'Pawn already on board.')
+
         self.pieces.append(pawn)
-        self.squares[pawn.x][pawn.y] = pawn
+        self.squares[x][y] = pawn
 
     def move_pawn(
         self,
@@ -64,9 +73,9 @@ class Board:
 class Pawn:
     def __init__(
         self,
-        x: int,
-        y: int,
-        color = None
+        x: int | None = None,
+        y: int | None = None,
+        color: str | None = None
     ):
         self.x = x
         self.y = y

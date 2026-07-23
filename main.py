@@ -25,18 +25,29 @@ class Board:
 
             print()
 
+    def validate_coordinates(self, x: int, y: int) -> None:
+        if not 0 <= x <= self.board_size - 1:
+            raise ValueError(f'x must be between 0 and {self.board_size - 1}')
+        if not 0 <= y <= self.board_size - 1:
+            raise ValueError(f'y must be between 0 and {self.board_size - 1}')
+
+    def validate_square_empty(self, x: int, y: int) -> None:
+        if self.squares[x][y] is not None:
+            raise ValueError("Square is already occupied")
+
+    def validate_piece_outside(self, piece) -> None:
+        if piece in self.pieces:
+            raise ValueError(f'Piece already on board')
+
     def add_pawn(
         self,
         pawn: Pawn,
         x: int,
         y: int,
     ):
-        if not 0 <= x <= self.board_size - 1:
-            raise ValueError(f'x must be between 0 and {self.board_size - 1}.')
-        elif not 0 <= y <= self.board_size - 1:
-            raise ValueError(f'y must be between 0 and {self.board_size - 1}.')
-        elif pawn in self.pieces:
-            raise ValueError(f'Pawn already on board.')
+        self.validate_coordinates(x, y)
+        self.validate_piece_outside(pawn)
+        self.validate_square_empty(x, y)
 
         self.pieces.append(pawn)
         self.squares[x][y] = pawn
@@ -47,12 +58,15 @@ class Board:
         new_x: int,
         new_y: int
     ):
+        self.validate_coordinates(new_x,new_y)
+        self.validate_square_empty(new_x, new_y)
+
         self.squares[pawn.x][pawn.y] = None
 
         pawn.x = new_x
         pawn.y = new_y
 
-        self.squares[pawn.x][pawn.y] = pawn
+        self.squares[new_x][new_y] = pawn
 
     def add_wall(
         self,

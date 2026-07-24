@@ -39,7 +39,11 @@ class Board:
         if not 0 <= y < limit:
             raise ValueError(f"y must be between 0 and {limit - 1}")
 
-    def validate_square_empty(self, x: int, y: int) -> None:
+    def validate_square_empty(
+        self,
+        x: int,
+        y: int
+    ) -> None:
         if self.squares[x][y] is not None:
             raise ValueError("Square is already occupied")
 
@@ -52,8 +56,8 @@ class Board:
         pawn: Pawn,
         x: int,
         y: int,
-    ):
-        self.validate_coordinates(x, y)
+    ) -> None:
+        self.validate_coordinates(x, y, on = 'squares')
         self.validate_piece_outside(pawn)
         self.validate_square_empty(x, y)
 
@@ -68,8 +72,8 @@ class Board:
         pawn: Pawn,
         new_x: int,
         new_y: int
-    ):
-        self.validate_coordinates(new_x,new_y)
+    ) -> None:
+        self.validate_coordinates(new_x,new_y, on = 'squares')
         self.validate_square_empty(new_x, new_y)
 
         self.squares[pawn.x][pawn.y] = None
@@ -84,8 +88,8 @@ class Board:
         wall: Wall,
         x: int,
         y: int,
-        orientation: int
-    ):
+        orientation: Literal[0, 1]
+    ) -> None:
         wall.x = x
         wall.y = y
         wall.orientation = orientation
@@ -111,7 +115,7 @@ class Wall:
         self,
         x: int | None = None ,
         y: int | None = None,
-        orientaion: int | None = None,
+        orientaion: Literal[0, 1] | None = None,
     ):
         self.x = x
         self.y = y
@@ -123,17 +127,26 @@ class Player:
         self,
         pawn_x: int,
         pawn_y: int,
-        pawn_color: str
+        pawn_color: str,
     ):
         self.pawn = Pawn(pawn_x, pawn_y, pawn_color)
         self.walls = [Wall() for _ in range(NUM_START_WALLS)]
 
 
-def check_wall_center_collision(lattice, new_wall_x, new_wall_y):
+def check_wall_center_collision(
+    lattice,
+    new_wall_x: int,
+    new_wall_y: int,
+) -> bool:
     return lattice[new_wall_x][new_wall_y] != None
 
 
-def check_wall_adjacent_collision(lattice, new_wall_x, new_wall_y, new_wall_orientation):
+def check_wall_adjacent_collision(
+    lattice,
+    new_wall_x: int,
+    new_wall_y: int,
+    new_wall_orientation: Literal[0, 1],
+) -> bool:
     collisions = []
 
     for delta in [-1,1]:
@@ -150,6 +163,11 @@ def check_wall_adjacent_collision(lattice, new_wall_x, new_wall_y, new_wall_orie
     return any(collisions)
 
 
-def check_wall_collision(lattice, new_wall_x, new_wall_y, new_wall_orientation):
+def check_wall_collision(
+    lattice,
+    new_wall_x: int,
+    new_wall_y: int,
+    new_wall_orientation: Literal[0, 1],
+) -> bool:
     return check_wall_center_collision(lattice, new_wall_x, new_wall_y) or check_wall_adjacent_collision(lattice, new_wall_x, new_wall_y, new_wall_orientation)
 

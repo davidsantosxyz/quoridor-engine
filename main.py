@@ -25,11 +25,19 @@ class Board:
 
             print()
 
-    def validate_coordinates(self, x: int, y: int) -> None:
-        if not 0 <= x <= self.board_size - 1:
-            raise ValueError(f'x must be between 0 and {self.board_size - 1}')
-        if not 0 <= y <= self.board_size - 1:
-            raise ValueError(f'y must be between 0 and {self.board_size - 1}')
+    def validate_coordinates(
+        self,
+        x: int,
+        y: int,
+        on: Literal["squares", "lattice"],
+    ) -> None:
+        offset = {"squares": 0, "lattice": 1}[on]
+        limit = self.board_size - offset
+
+        if not 0 <= x < limit:
+            raise ValueError(f"x must be between 0 and {limit - 1}")
+        if not 0 <= y < limit:
+            raise ValueError(f"y must be between 0 and {limit - 1}")
 
     def validate_square_empty(self, x: int, y: int) -> None:
         if self.squares[x][y] is not None:

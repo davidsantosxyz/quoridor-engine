@@ -49,6 +49,9 @@ class Board:
         self.validate_piece_outside(pawn)
         self.validate_square_empty(x, y)
 
+        pawn.x = x
+        pawn.y = y
+
         self.pieces.append(pawn)
         self.squares[x][y] = pawn
 

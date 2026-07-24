@@ -78,7 +78,6 @@ class Board:
         wall.x = x
         wall.y = y
         wall.orientation = orientation
-        wall.on_board = True
 
         self.lattice[x][y] = wall
         self.pieces.append(wall)
@@ -102,12 +101,10 @@ class Wall:
         x: int | None = None ,
         y: int | None = None,
         orientaion: int | None = None,
-        on_board: bool = False
     ):
         self.x = x
         self.y = y
         self.orientation = orientaion
-        self.on_board = on_board
 
 
 class Player:

@@ -98,6 +98,10 @@ class Board:
         y: int,
         orientation: Literal[0, 1]
     ) -> None:
+        self.validate_coordinates(x, y, on = 'lattice')
+        self.validate_piece_outside(wall)
+        self.validate_point_empty(x, y)
+
         wall.x = x
         wall.y = y
         wall.orientation = orientation

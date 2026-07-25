@@ -47,6 +47,14 @@ class Board:
         if self.squares[x][y] is not None:
             raise ValueError("Square is already occupied")
 
+    def validate_point_empty(
+        self,
+        x: int,
+        y: int,
+    ) -> None:
+        if self.lattice[x][y] is not None:
+            raise ValueError("Point is already occupied")
+
     def validate_piece_outside(self, piece) -> None:
         if piece in self.pieces:
             raise ValueError(f'Piece already on board')

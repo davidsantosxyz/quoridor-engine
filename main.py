@@ -101,6 +101,9 @@ class Board:
         self.validate_coordinates(x, y, on = 'lattice')
         self.validate_piece_outside(wall)
         self.validate_point_empty(x, y)
+        if check_wall_collision(self.lattice, x, y, orientation):
+            raise ValueError('Wall collision')
+
 
         wall.x = x
         wall.y = y
@@ -145,15 +148,7 @@ class Player:
         self.walls = [Wall() for _ in range(NUM_START_WALLS)]
 
 
-def check_wall_center_collision(
-    lattice,
-    new_wall_x: int,
-    new_wall_y: int,
-) -> bool:
-    return lattice[new_wall_x][new_wall_y] != None
-
-
-def check_wall_adjacent_collision(
+def check_wall_collision(
     lattice,
     new_wall_x: int,
     new_wall_y: int,
@@ -165,7 +160,7 @@ def check_wall_adjacent_collision(
         neighbor_x = new_wall_x * (1 - new_wall_orientation) + (new_wall_x +  delta) * new_wall_orientation
         neighbor_y = (new_wall_y + delta) * (1 - new_wall_orientation) + new_wall_y * new_wall_orientation
 
-        if all(coord in range(lattice.shape[0]) for coord in [neighbor_x, neighbor_y]):
+        if all(0 <= coord < lattice.shape[0] for coord in [neighbor_x, neighbor_y]):
             neighbor = lattice[neighbor_x][neighbor_y]
         else:
             neighbor = None
@@ -173,13 +168,4 @@ def check_wall_adjacent_collision(
         collisions.append(neighbor is not None and neighbor.orientation == new_wall_orientation)
 
     return any(collisions)
-
-
-def check_wall_collision(
-    lattice,
-    new_wall_x: int,
-    new_wall_y: int,
-    new_wall_orientation: Literal[0, 1],
-) -> bool:
-    return check_wall_center_collision(lattice, new_wall_x, new_wall_y) or check_wall_adjacent_collision(lattice, new_wall_x, new_wall_y, new_wall_orientation)
 

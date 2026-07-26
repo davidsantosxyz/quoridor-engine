@@ -1,5 +1,3 @@
-from warnings import warn
-
 import numpy as np
 
 BOARD_SIZE = 9

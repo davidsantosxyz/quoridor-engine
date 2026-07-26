@@ -1,3 +1,5 @@
+from warnings import warn
+
 import numpy as np
 
 BOARD_SIZE = 9
@@ -8,7 +10,13 @@ class Board:
     def __init__(self, board_size: int):
         self.board_size = board_size
         self.squares = np.array([[None] * board_size for _ in range(board_size)])
-        self.lattice = np.array([[None] * (board_size - 1) for _ in range(board_size - 1)])
+
+        self.lattice_size = board_size - 1
+        self.lattice = np.array([[None] * self.lattice_size for _ in range(self.lattice_size)])
+        
+        self.canvas_size = 2*self.board_size - 1
+        self.canvas = [[' '] * self.canvas_size for _ in range(self.canvas_size)]
+
         self.pieces = []
 
     def print_squares(self):
@@ -22,6 +30,54 @@ class Board:
                     print(dot.orientation, end=' ')
                 else:
                     print('.', end=' ')
+
+            print()
+        
+    def paint_squares(self):
+        for i in range(self.board_size):
+            for j in range(self.board_size):
+                square = self.squares[i][j]
+
+                if square is not None:
+                    self.canvas[2*i][2*j] = square.color
+
+    def paint_wall(
+        self,
+        x: int,
+        y: int,
+        orientation: Literal[0, 1],
+    ):
+        for delta in [-1,0,1]:
+            if orientation == 0:
+                self.canvas[x][y + delta] = '\u2501'
+            else:
+                self.canvas[x + delta][y] = '\u2503'
+
+    def paint_lattice(self):
+        for i in range(self.board_size - 1):
+            for j in range(self.board_size - 1):
+                point = self.lattice[i][j]
+
+                if point is not None: 
+                    self.paint_wall(2*i+1, 2*j+1, point.orientation)
+
+    def print_board(self):
+        self.paint_squares()
+        self.paint_lattice()
+
+        i = j = -1
+        for row in self.canvas:
+            i += 1
+
+            for cell in row:
+                j += 1
+
+                if cell == '\u2501':
+                    print(cell, end = cell)
+                elif cell == ' ' and i % 2 == 0 and j % 2 == 0:
+                    print('\u25A2', end = ' ')
+                else:
+                    print(cell, end=' ')
 
             print()
 

@@ -1,6 +1,7 @@
 from objects import *
+import config
 
-board = Board(BOARD_SIZE)
+board = Board(config.BOARD_SIZE)
 
 player1 = Player(pawn_color='white')
 board.add_pawn(player1.pawn, 8, 4)

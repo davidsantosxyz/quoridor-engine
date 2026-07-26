@@ -1,7 +1,5 @@
 import numpy as np
-
-BOARD_SIZE = 9
-NUM_START_WALLS = 10
+import config
 
 
 class Board:
@@ -13,7 +11,7 @@ class Board:
         self.lattice = np.array([[None] * self.lattice_size for _ in range(self.lattice_size)])
         
         self.canvas_size = 2*self.board_size - 1
-        self.canvas = [[' '] * self.canvas_size for _ in range(self.canvas_size)]
+        self.canvas = [[config.EMPTY_SYMBOL] * self.canvas_size for _ in range(self.canvas_size)]
 
         self.pieces = []
 
@@ -47,9 +45,9 @@ class Board:
     ):
         for delta in [-1,0,1]:
             if orientation == 0:
-                self.canvas[x][y + delta] = '\u2501'
+                self.canvas[x][y + delta] = config.HORIZONTAL_WALL_SYMBOL
             else:
-                self.canvas[x + delta][y] = '\u2503'
+                self.canvas[x + delta][y] = config.VERTICAL_WALL_SYMBOL
 
     def paint_lattice(self):
         for i in range(self.board_size - 1):
@@ -70,12 +68,12 @@ class Board:
             for cell in row:
                 j += 1
 
-                if cell == '\u2501':
+                if cell == config.HORIZONTAL_WALL_SYMBOL:
                     print(cell, end = cell)
-                elif cell == ' ' and i % 2 == 0 and j % 2 == 0:
-                    print('\u25A2', end = ' ')
+                elif cell == config.EMPTY_SYMBOL and i % 2 == 0 and j % 2 == 0:
+                    print(config.SQUARE_SYMBOL, end = config.EMPTY_SYMBOL)
                 else:
-                    print(cell, end=' ')
+                    print(cell, end=config.EMPTY_SYMBOL)
 
             print()
 
@@ -199,7 +197,7 @@ class Player:
         pawn_color: str | None = None,
     ):
         self.pawn = Pawn(pawn_x, pawn_y, pawn_color)
-        self.walls = [Wall() for _ in range(NUM_START_WALLS)]
+        self.walls = [Wall() for _ in range(config.NUM_START_WALLS)]
 
 
 def check_wall_collision(

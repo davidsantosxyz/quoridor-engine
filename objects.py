@@ -168,6 +168,32 @@ class Board:
 
         self.lattice[x][y] = wall
         self.pieces.append(wall)
+        
+    def find_cuts(self):
+        cuts = []
+
+        for piece in self.pieces:
+            if isinstance(piece,Wall):
+                first_origin = (piece.x, piece.y) 
+                first_destin = (
+                    piece.x + (1 - piece.orientation),
+                    piece.y + piece.orientation
+                )
+                first_cut = (first_origin, first_destin)
+                cuts.append(first_cut)
+
+                second_origin = (
+                    piece.x + piece.orientation,
+                    piece.y + (1 - piece.orientation)
+                ) 
+                second_destin = (
+                    piece.x + 1,
+                    piece.y + 1
+                )
+                second_cut = (second_origin, second_destin)
+                cuts.append(second_cut)
+
+        return cuts
 
 
 class Pawn:

@@ -15,6 +15,13 @@ class Board:
 
         self.pieces = []
 
+    def set_game(self):
+        self.player_white = Player(*config.WHITE_STARTING_COORDS,config.WHITE_PAWN_SYMBOL)
+        self.player_black = Player(*config.BLACK_STARTING_COORDS,config.BLACK_PAWN_SYMBOL)
+
+        self.add_pawn(self.player_white.pawn,self.player_white.pawn.x,self.player_white.pawn.y)
+        self.add_pawn(self.player_black.pawn,self.player_black.pawn.x,self.player_black.pawn.y)
+
     def print_squares(self):
         for row in self.squares:
             print(row)
@@ -194,9 +201,9 @@ class Player:
         self,
         pawn_x: int | None = None,
         pawn_y: int | None = None,
-        pawn_color: str | None = None,
+        pawn_symbol: str | None = None,
     ):
-        self.pawn = Pawn(pawn_x, pawn_y, pawn_color)
+        self.pawn = Pawn(pawn_x, pawn_y, pawn_symbol)
         self.walls = [Wall() for _ in range(config.NUM_START_WALLS)]
 
 

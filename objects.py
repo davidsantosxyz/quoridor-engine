@@ -15,10 +15,8 @@ class Board:
 
         self.pieces = []
 
-    def set_game(self):
         self.player_white = Player(*config.WHITE_STARTING_COORDS,config.WHITE_PAWN_SYMBOL)
         self.player_black = Player(*config.BLACK_STARTING_COORDS,config.BLACK_PAWN_SYMBOL)
-
         self.add_pawn(self.player_white.pawn,self.player_white.pawn.x,self.player_white.pawn.y)
         self.add_pawn(self.player_black.pawn,self.player_black.pawn.x,self.player_black.pawn.y)
 

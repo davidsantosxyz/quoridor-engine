@@ -22,3 +22,15 @@ def mesh_coord_to_num(x, y, side_length: int) -> int:
 
     return x * side_length + y
 
+def cuts_to_adj_entries(cuts, mesh_side: int):
+    entries = []
+
+    for cut in cuts:
+        coord_x = mesh_coord_to_num(cut[0][0], cut[0][1], mesh_side)
+        coord_y = mesh_coord_to_num(cut[1][0], cut[1][1], mesh_side)
+        entry = (coord_x, coord_y)
+
+        entries.append(entry)
+
+    return entries
+        

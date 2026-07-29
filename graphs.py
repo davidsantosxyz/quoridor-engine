@@ -1,3 +1,4 @@
+from copy import deepcopy
 
 def mesh_graph(side_length: int):
     num_vertices = side_length**2
@@ -34,3 +35,12 @@ def cuts_to_adj_entries(cuts, mesh_side: int):
 
     return entries
         
+def remove_edges(adj_matrix, entries):
+    adj_matrix = deepcopy(adj_matrix)
+
+    for cut in entries:
+        adj_matrix[cut[0]][cut[1]] = 0
+        adj_matrix[cut[1]][cut[0]] = 0
+
+    return adj_matrix
+

@@ -1,6 +1,12 @@
 from copy import deepcopy
 
+def _validate_greater_than_zero(input_value: int | float, var_name: str) -> None:
+    if input_value <= 0:
+        raise ValueError(f'{var_name} must be grater than 0, but {input_value} was given')
+
 def mesh_graph(side_length: int):
+    _validate_greater_than_zero(side_length, 'side_length')
+
     num_vertices = side_length**2
 
     mesh = [[0] * num_vertices for _ in range(num_vertices)]
@@ -17,6 +23,8 @@ def mesh_graph(side_length: int):
     return mesh
 
 def mesh_coord_to_num(x, y, side_length: int) -> int:
+    _validate_greater_than_zero(side_length, 'side_length')
+
     for var_name, var_value in (('x', x),('y', y)):
         if not 0 <= var_value < side_length:
             raise ValueError(f'{var_name} must be between {0} and {side_length - 1}')
@@ -24,6 +32,8 @@ def mesh_coord_to_num(x, y, side_length: int) -> int:
     return x * side_length + y
 
 def cuts_to_adj_entries(cuts, mesh_side: int):
+    _validate_greater_than_zero(mesh_side, 'mesh_side')
+
     entries = []
 
     for cut in cuts:

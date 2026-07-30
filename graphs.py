@@ -54,3 +54,12 @@ def remove_edges(adj_matrix, entries):
 
     return adj_matrix
 
+def find_connected_component(v: int, adj, l = []) -> list:
+    l.append(v)
+
+    neighbors = [ind for ind, edge in enumerate(adj[v]) if edge == 1]
+    paths = [i for i in neighbors if i not in l]
+    for i in paths:
+        find_connected_component(i, adj, l)
+
+    return l

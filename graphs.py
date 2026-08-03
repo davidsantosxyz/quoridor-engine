@@ -1,4 +1,5 @@
 from copy import deepcopy
+import math
 
 def _validate_greater_than_zero(input_value: int | float, var_name: str) -> None:
     if input_value <= 0:
@@ -37,6 +38,7 @@ def cuts_to_adj_entries(cuts, mesh_side: int):
     entries = []
 
     for cut in cuts:
+        print(cut)
         coord_x = mesh_coord_to_num(cut[0][0], cut[0][1], mesh_side)
         coord_y = mesh_coord_to_num(cut[1][0], cut[1][1], mesh_side)
         entry = (coord_x, coord_y)
@@ -53,6 +55,16 @@ def remove_edges(adj_matrix, entries):
         adj_matrix[cut[1]][cut[0]] = 0
 
     return adj_matrix
+
+def apply_cuts(adj_matrix, cuts):
+    matrix_dim = len(adj_matrix)
+    mesh_side = math.isqrt(matrix_dim)
+    if mesh_side ** 2 != matrix_dim:
+        raise ValueError('adj_matrix should have side equal to a perfect square')
+
+    zero_entries = cuts_to_adj_entries(cuts, mesh_side)
+
+    return remove_edges(adj_matrix, zero_entries)
 
 def find_connected_component(v: int, adj, l = []) -> list:
     l.append(v)

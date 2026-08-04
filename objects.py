@@ -209,13 +209,6 @@ class Board:
 
         return cuts
         
-    def current_graph(self):
-        cuts = self.find_cuts()
-        zero_entries = gr.cuts_to_adj_entries(cuts, self.board_size)
-
-        full_mesh = gr.mesh_graph(self.board_size)
-        return gr.remove_edges(full_mesh, zero_entries) 
-
 
 class Pawn:
     def __init__(

@@ -1,3 +1,5 @@
+from warnings import warn
+
 import numpy as np
 import config
 import graphs as gr
@@ -13,6 +15,8 @@ class Board:
         
         self.canvas_size = 2*self.board_size - 1
         self.canvas = [[config.EMPTY_SYMBOL] * self.canvas_size for _ in range(self.canvas_size)]
+
+        self.graph = gr.mesh_graph(board_size)
 
         self.pieces = []
 
@@ -168,30 +172,39 @@ class Board:
         wall.orientation = orientation
 
         self.lattice[x][y] = wall
+
+        wall_cuts = self.find_wall_cuts(wall)
+        self.graph = gr.apply_cuts(self.graph, wall_cuts)
+
         self.pieces.append(wall)
+
+    def find_wall_cuts(self, wall: Wall):
+        first_origin = (wall.x, wall.y) 
+        first_destin = (
+            wall.x + (1 - wall.orientation),
+            wall.y + wall.orientation
+        )
+        first_cut = (first_origin, first_destin)
+
+        second_origin = (
+            wall.x + wall.orientation,
+            wall.y + (1 - wall.orientation)
+        ) 
+        second_destin = (
+            wall.x + 1,
+            wall.y + 1
+        )
+        second_cut = (second_origin, second_destin)
+
+        return first_cut, second_cut
         
     def find_cuts(self):
         cuts = []
 
         for piece in self.pieces:
             if isinstance(piece,Wall):
-                first_origin = (piece.x, piece.y) 
-                first_destin = (
-                    piece.x + (1 - piece.orientation),
-                    piece.y + piece.orientation
-                )
-                first_cut = (first_origin, first_destin)
+                first_cut, second_cut = self.find_wall_cuts(piece)
                 cuts.append(first_cut)
-
-                second_origin = (
-                    piece.x + piece.orientation,
-                    piece.y + (1 - piece.orientation)
-                ) 
-                second_destin = (
-                    piece.x + 1,
-                    piece.y + 1
-                )
-                second_cut = (second_origin, second_destin)
                 cuts.append(second_cut)
 
         return cuts
